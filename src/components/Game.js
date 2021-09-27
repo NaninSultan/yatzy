@@ -6,6 +6,7 @@ import ScoreTable from './ScoreTable';
 
 const DICE_NUM = 5;
 const ROLL_NUM = 3;
+var counter = 0;
 
 const Game = () => {
 
@@ -55,7 +56,7 @@ const Game = () => {
             ...gameState,
             rolling: true
         }));
-        setTimeout(roll, 500);
+        setTimeout(roll, 0);
     }
 
     const toggleLocked = (idx) => {
@@ -78,10 +79,11 @@ const Game = () => {
             rollsLeft: ROLL_NUM,
             locked: Array(DICE_NUM).fill(false),
         }));
+        counter++;
     }
 
     const displayRollInfo = () => {
-        const messages = [
+           const messages = [
             '0 Rolls Left',
             '1 Roll Left',
             '2 Rolls Left',
@@ -89,6 +91,30 @@ const Game = () => {
         ];
         return messages[gameState.rollsLeft]
     }
+
+    const getTotalScore = () => {
+        let totalScore = 0;
+        for (let key in gameState.scores) {
+            if (gameState.scores[key]) totalScore += gameState.scores[key]
+        }
+        return totalScore
+    }
+
+    const highScore = localStorage.getItem("highScore");
+
+    if (counter === 13) {
+        if (getTotalScore() > highScore) {
+            localStorage.setItem("highScore", getTotalScore())
+        }
+        localStorage.setItem("totalScore", getTotalScore())
+
+        
+    }
+
+    const playAgain = () => {
+        window.location.reload();
+    }
+
 
     return (
         <div style={{marginTop: "100px"}}>
@@ -101,7 +127,20 @@ const Game = () => {
                     disabled={gameState.rollsLeft === 0}
                     rolling={gameState.rolling}
                 />
-                <Button
+                {counter === 13 && <Button
+                style={{marginBottom: "20px", marginTop: "10px", width:"620px"}}
+                    variant="contained"
+                    color="secondary"
+                    disabled={
+                        gameState.locked.every(x => x) ||
+                        gameState.rollsLeft === 0 ||
+                        gameState.rolling
+                    }
+                    onClick={playAgain}
+                >
+                    PLAY AGAIN
+                </Button>}
+                {counter < 13 && <Button
                 style={{marginBottom: "20px", marginTop: "10px", width:"620px"}}
                     variant="contained"
                     color="primary"
@@ -113,9 +152,9 @@ const Game = () => {
                     onClick={animateRoll}
                 >
                     {displayRollInfo()}
-                </Button>
+                </Button>}
             </Grid>
-            <ScoreTable doScore={doScore} scores={gameState.scores} />
+            <ScoreTable getTotalScore={getTotalScore} doScore={doScore} scores={gameState.scores} />
         </div>
         </div>
     )

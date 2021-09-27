@@ -17,16 +17,9 @@ import {
     chance
 } from './Rules';
 
-const ScoreTable = ({ scores, doScore }) => {
+const ScoreTable = ({ scores, doScore, getTotalScore }) => {
 
-
-    const getTotalScore = () => {
-        let totalScore = 0;
-        for (let key in scores) {
-            if (scores[key]) totalScore += scores[key]
-        }
-        return totalScore
-    }
+    getTotalScore();
 
     return (
         <div className='ScoreTable'>
@@ -122,7 +115,7 @@ const ScoreTable = ({ scores, doScore }) => {
             </tbody>
           </table>
         </section>
-        <Typography variant="h4">Total Score: {getTotalScore()}</Typography>
+        <Typography style={{marginBottom: "30px"}} variant="h4">Total Score: {getTotalScore()}</Typography>
       </div> 
     )
 

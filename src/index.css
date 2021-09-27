@@ -33,6 +33,12 @@ footer {
   margin: 7px;
 }
 
+.rightTop {
+  float: right;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
 .Game {
   margin-top: 150px;
   position: relative;
